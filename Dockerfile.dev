@@ -1,0 +1,15 @@
+FROM resin/nuc-golang:1.6
+
+RUN apt-get update
+RUN apt-get install -y motion \
+    && apt-get install -y supervisor \
+    && apt-get clean
+
+COPY ./etc/motion.conf /tmp/etc/
+RUN cat /tmp/etc/motion.conf >> /etc/motion/motion.conf
+COPY ./etc/supervisord.conf /etc/supervisord.conf
+
+COPY ./start.sh /
+RUN chmod 755 /start.sh
+
+CMD ["/bin/bash", "/start.sh"]
